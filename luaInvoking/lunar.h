@@ -1,8 +1,9 @@
-extern "C" {
-#include "lua.h"
-#include "lauxlib.h"
-}
+#pragma once
+#include "luaHeader.h"
 
+/**
+ * Taken directly from http://lua-users.org/wiki
+ */
 template <typename T> class Lunar {
 	typedef struct { T *pT; } userdataType;
 public:
@@ -10,30 +11,47 @@ public:
 	typedef struct { const char *name; mfp mfunc; } RegType;
 
 	static void Register(lua_State *L) {
+		//新建一个table,methods保存其栈索引,这个方法表就是用来保存要导出的成员函数
 		lua_newtable(L);
 		int methods = lua_gettop(L);
 
+		//在注册表中新建一个元表,metatable保存其栈索引.
+		//元表是模拟面向对象机制的关键.后面将会把该元表赋予fulluserdata(C++对象在lua中的映射对象).
 		luaL_newmetatable(L, T::className);
 		int metatable = lua_gettop(L);
 
 		// store method table in globals so that
 		// scripts can add functions written in Lua.
+		//全局表[T::className]=methods表
 		lua_pushvalue(L, methods);
-		set(L, LUA_GLOBALSINDEX, T::className);
+		//set(L, LUA_GLOBALSINDEX, T::className);
+		lua_setglobal(L, T::className);
 
 		// hide metatable from Lua getmetatable()
+		//设置metatable元表的__metatable元事件
+		//作用是将元表封装起来,防止外部的获取和修改
 		lua_pushvalue(L, methods);
 		set(L, metatable, "__metatable");
 
+		//设置metatable元表的__index元事件指向methods表
+		//该事件会在元表onwer被索引不存在成员时触发,这时就会去methods表中进行索引...
 		lua_pushvalue(L, methods);
 		set(L, metatable, "__index");
 
+		//设置元表的__tostring和__gc元事件
+		//前者是为了支持print(MyObj)这样的用法..
+		//后者是设置我们的lua对象被垃圾回收时的一个回调.
 		lua_pushcfunction(L, tostring_T);
 		set(L, metatable, "__tostring");
 
 		lua_pushcfunction(L, gc_T);
 		set(L, metatable, "__gc");
 
+		//下面一段代码干了这么些事:
+		//1.创建方法表的元表mt
+		//2.方法表.new = new_T
+		//3.设置mt的__call元事件.该事件会在lua执行到a()这样的函数调用形式时触发.
+		//这使得我们可以重写该事件使得能对table进行调用...如t()
 		lua_newtable(L);                // mt for method table
 		lua_pushcfunction(L, new_T);
 		lua_pushvalue(L, -1);           // dup new_T function
@@ -45,10 +63,11 @@ public:
 		for (RegType *l = T::methods; l->name; l++) {
 			lua_pushstring(L, l->name);
 			lua_pushlightuserdata(L, (void*)l);
-			lua_pushcclosure(L, thunk, 1);
-			lua_settable(L, methods);
+			lua_pushcclosure(L, thunk, 1);		//创建闭包,附带数据为RegType项
+			lua_settable(L, methods);			//方法表[l->name]=闭包
 		}
 
+		//平衡栈
 		lua_pop(L, 2);  // drop metatable and method table
 	}
 
@@ -116,7 +135,8 @@ public:
 		userdataType *ud =
 			static_cast<userdataType*>(luaL_checkudata(L, narg, T::className));
 		if(!ud) {
-			luaL_typerror(L, narg, T::className);
+			const char *msg = lua_pushfstring(L, "%s expected, got %s", T::className, luaL_typename(L, narg));
+			luaL_argerror(L, narg, msg);
 			return NULL;
 		}
 		return ud->pT;  // pointer to T object
@@ -212,3 +232,4 @@ private:
 };
 
 #define LUNAR_DECLARE_METHOD(Class, Name) {#Name, &Class::Name}
+#define TRACE_TOP printf("top=%d\n",lua_gettop(L));
