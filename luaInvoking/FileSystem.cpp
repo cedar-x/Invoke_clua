@@ -1,4 +1,5 @@
 #include "FileSystem.h"
+using namespace XXHelper;
 
 const char FileSystem::className[] = "FileSystem22";
 Lunar<FileSystem>::RegType FileSystem::methods[] =
@@ -218,4 +219,5 @@ bool FileSystem::_SearchFolder()
 {
 	return true;
 }
+
 

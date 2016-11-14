@@ -1,10 +1,12 @@
-#pragma once
+#ifndef __LUNAR_H__
+#define __LUNAR_H__
 #include "luaHeader.h"
 
 /**
  * Taken directly from http://lua-users.org/wiki
  */
-template <typename T> class Lunar {
+template <typename T> 
+class Lunar {
 	typedef struct { T *pT; } userdataType;
 public:
 	typedef int (T::*mfp)(lua_State *L);
@@ -143,7 +145,7 @@ public:
 	}
 
 private:
-	Lunar();  // hide default constructor
+	Lunar(){};  // hide default constructor
 
 	// member function dispatcher
 	static int thunk(lua_State *L) {
@@ -233,3 +235,5 @@ private:
 
 #define LUNAR_DECLARE_METHOD(Class, Name) {#Name, &Class::Name}
 #define TRACE_TOP printf("top=%d\n",lua_gettop(L));
+
+#endif

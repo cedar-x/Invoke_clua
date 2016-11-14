@@ -1,5 +1,5 @@
 #include "Util.h"
-
+using namespace XXHelper;
 
 Util::Util(void)
 {

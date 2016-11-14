@@ -1,10 +1,16 @@
-#pragma once
-class Util
+#ifndef __UTIL_H__
+#define __UTIL_H__
+
+namespace XXHelper
 {
-public:
-	Util(void);
-	virtual ~Util(void);
-public:
-	int add(int a, int b);
-};
+	class Util
+	{
+	public:
+		Util(void);
+		virtual ~Util(void);
+	public:
+		int add(int a, int b);
+	};
+}
+#endif
 

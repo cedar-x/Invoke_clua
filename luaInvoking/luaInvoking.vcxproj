@@ -77,7 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="LuaUseClass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
