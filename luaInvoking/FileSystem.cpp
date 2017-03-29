@@ -127,29 +127,33 @@ int FileSystem::SearchFolder(lua_State* lua)
 {
 	return 0;
 }
-bool FileSystem::_MoveFile()
+bool FileSystem::_MoveFile(string src,string dst,bool bOverride)
 {
 	return true;
 }
-bool FileSystem::_GetCurrentDirectory()
+bool FileSystem::_SetCurrentDirectory(string path)
 {
 	return true;
 }
-bool FileSystem::_CopyFile()
+string FileSystem::_GetCurrentDirectory()
+{
+	return "";
+}
+bool FileSystem::_CopyFile(string src,string dst,bool bOverride)
 {
 	return true;
 }
-bool FileSystem::_GetFileInfo()
+bool FileSystem::_GetFileInfo(string filePath)
 {
 	return true;
 }
-bool FileSystem::_BuildPath()
+bool FileSystem::_BuildPath(string path)
 {
 	return true;
 }
-bool FileSystem::_GetExtension()
+string FileSystem::_GetExtension(string filePath)
 {
-	return true;
+	return "";
 }
 bool FileSystem::_Foreach()
 {
@@ -163,7 +167,7 @@ bool FileSystem::_CreateFolder()
 {
 	return true;
 }
-bool FileSystem::_DeleteFile()
+bool FileSystem::_DeleteFile(string filePath)
 {
 	return true;
 }
@@ -171,31 +175,27 @@ bool FileSystem::_RenameFile()
 {
 	return true;
 }
-bool FileSystem::_DeleteFolder()
+bool FileSystem::_DeleteFolder(string path,bool bRecursive)
 {
 	return true;
 }
-bool FileSystem::_GetDirectoryPath()
+string FileSystem::_GetDirectoryPath(string filePath)
 {
-	return true;
-}
-bool FileSystem::_SetCurrentDirectory()
-{
-	return true;
+	return "";
 }
 bool FileSystem::_FileExist()
 {
 	return true;
 }
-bool FileSystem::_GetFileName()
+string FileSystem::_GetFileName(string filePath)
+{
+	return "";
+}
+bool FileSystem::_SearchFile(string pattern,bool bFullPath,bool bSearchHide)
 {
 	return true;
 }
-bool FileSystem::_SearchFile()
-{
-	return true;
-}
-bool FileSystem::_GetPathInfo()
+bool FileSystem::_GetPathInfo(string path)
 {
 	return true;
 }
@@ -203,9 +203,9 @@ bool FileSystem::_StrReplacePathSpliteToUnixStyle()
 {
 	return true;
 }
-bool FileSystem::_GetFileNameWithoutExtension()
+string FileSystem::_GetFileNameWithoutExtension(string filePath)
 {
-	return true;
+	return "";
 }
 bool FileSystem::_PackBundle()
 {
@@ -215,7 +215,7 @@ bool FileSystem::_UnpackBundle()
 {
 	return true;
 }
-bool FileSystem::_SearchFolder()
+bool FileSystem::_SearchFolder(string path,bool bRecursive,bool bSearchHide)
 {
 	return true;
 }

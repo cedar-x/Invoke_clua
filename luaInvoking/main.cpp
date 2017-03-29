@@ -14,7 +14,7 @@ int main (int argc,char*argv[])
 	L = luaL_newstate();  
 	/* load Lua libraries */  
 	luaL_openlibs(L);  
-
+	
 	//Lua÷–◊¢≤·¿‡////////////////////////////////////////////////////
 	Lunar<FileSystem>::Register(L);
 	FileSystem * g_pFileSystem = new FileSystem();
@@ -24,7 +24,11 @@ int main (int argc,char*argv[])
 	{
 		printf("Failed:%d,%s\n", error, lua_tostring(L, -1));
 	}
-
+	lua_getglobal(L, "main");   
+	if((error = lua_pcall(L,0,0,0))!=0)
+	{
+		printf("Failed:%d,%s\n", error, lua_tostring(L, -1));
+	}
 	/*
 	--LuaUseClass.lua
 	function FileSystem22:MoveFile22()

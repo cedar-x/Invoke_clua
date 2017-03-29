@@ -2,6 +2,8 @@
 #define __LUAHEADER_H__ 
 
 #include <stdio.h>
+#include <iostream>
+using namespace std;
 
 extern "C" {
 #include "./HeadFile/luaconf.h"
